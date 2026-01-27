@@ -57,6 +57,16 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        difficulty: {
+          yellow: "hsl(var(--difficulty-yellow))",
+          "yellow-foreground": "hsl(var(--difficulty-yellow-foreground))",
+          green: "hsl(var(--difficulty-green))",
+          "green-foreground": "hsl(var(--difficulty-green-foreground))",
+          blue: "hsl(var(--difficulty-blue))",
+          "blue-foreground": "hsl(var(--difficulty-blue-foreground))",
+          purple: "hsl(var(--difficulty-purple))",
+          "purple-foreground": "hsl(var(--difficulty-purple-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
