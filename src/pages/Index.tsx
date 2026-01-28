@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { GameGrid } from "@/components/GameGrid";
 import { SolvedCategories } from "@/components/SolvedCategories";
 import { LivesIndicator } from "@/components/LivesIndicator";
@@ -15,33 +15,41 @@ export interface SolvedCategory {
   words: Word[];
 }
 
-// Mock data - replace with your actual words
-const INITIAL_WORDS: Word[] = [
-  { id: "1", text: "ELMA" },
-  { id: "2", text: "ARMUT" },
-  { id: "3", text: "ÜzÜM" },
-  { id: "4", text: "KİRAZ" },
-  { id: "5", text: "KÖPEK" },
-  { id: "6", text: "KEDİ" },
-  { id: "7", text: "TAVŞAN" },
-  { id: "8", text: "HAMSTER" },
-  { id: "9", text: "İSTANBUL" },
-  { id: "10", text: "ANKARA" },
-  { id: "11", text: "İZMİR" },
-  { id: "12", text: "BURSA" },
-  { id: "13", text: "KIRMIZI" },
-  { id: "14", text: "MAVİ" },
-  { id: "15", text: "YEŞİL" },
-  { id: "16", text: "SARI" },
-];
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 const Index = () => {
-  const [words, setWords] = useState<Word[]>(INITIAL_WORDS);
+  const [words, setWords] = useState<Word[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [solvedCategories, setSolvedCategories] = useState<SolvedCategory[]>([]);
   const [lives, setLives] = useState(4);
   const [shakingIds, setShakingIds] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDailyWords = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/daily/`);
+        const data = await response.json();
+
+        console.log(data);
+
+        // Transform API response to Word format
+        const transformedWords: Word[] = data.shuffled_words.map((word: string, index: number) => ({
+          id: String(index + 1),
+          text: word,
+        }));
+
+        setWords(transformedWords);
+      } catch (error) {
+        console.error("Failed to fetch daily words:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDailyWords();
+  }, []);
 
   const handleWordClick = useCallback((id: string) => {
     if (isSubmitting || shakingIds.size > 0) return;
@@ -64,13 +72,12 @@ const Index = () => {
     const selectedWords = words.filter((w) => selectedIds.has(w.id));
 
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch("/api/check", {
+      const response = await fetch(`${API_BASE_URL}/check/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ words: selectedWords.map((w) => w.text) }),
       });
-      
+
       const result = await response.json();
 
       if (result.success) {
@@ -89,7 +96,7 @@ const Index = () => {
         // Failure: shake and reduce lives
         setShakingIds(new Set(selectedIds));
         setLives((prev) => prev - 1);
-        
+
         setTimeout(() => {
           setShakingIds(new Set());
           setSelectedIds(new Set());
@@ -99,7 +106,7 @@ const Index = () => {
       // For demo: simulate a wrong answer
       setShakingIds(new Set(selectedIds));
       setLives((prev) => prev - 1);
-      
+
       setTimeout(() => {
         setShakingIds(new Set());
         setSelectedIds(new Set());
@@ -115,10 +122,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <h1 className="text-3xl font-bold text-foreground mb-8">Bağlantılar</h1>
-      
+
       <div className="w-full max-w-lg space-y-2">
         <SolvedCategories categories={solvedCategories} />
-        
+
         {!isGameOver && !isGameWon && (
           <GameGrid
             words={words}
@@ -135,7 +142,7 @@ const Index = () => {
 
       <div className="mt-8 flex flex-col items-center gap-4">
         <LivesIndicator lives={lives} />
-        
+
         {!isGameOver && !isGameWon && (
           <button
             onClick={handleSubmit}
