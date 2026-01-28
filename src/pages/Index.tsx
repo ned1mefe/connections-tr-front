@@ -82,7 +82,7 @@ const Index = () => {
 
       const result = await response.json();
 
-      if (result.success) {
+      if (result.correct) {
         // Success: add to solved categories and remove words
         setSolvedCategories((prev) => [
           ...prev,
