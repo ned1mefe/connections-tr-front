@@ -3,6 +3,8 @@ import { GameGrid } from "@/components/GameGrid";
 import { SolvedCategories } from "@/components/SolvedCategories";
 import { LivesIndicator } from "@/components/LivesIndicator";
 import { GameOver } from "@/components/GameOver";
+import { toast } from "@/hooks/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 export interface Word {
   id: string;
@@ -97,6 +99,14 @@ const Index = () => {
         setShakingIds(new Set(selectedIds));
         setLives((prev) => prev - 1);
 
+        // Show "one away" toast if applicable
+        if (result.one_away) {
+          toast({
+            title: "Çok yaklaştın!",
+            description: "Seçimlerinden biri hariç hepsi aynı kategoride.",
+          });
+        }
+
         setTimeout(() => {
           setShakingIds(new Set());
           setSelectedIds(new Set());
@@ -121,6 +131,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <Toaster />
       <h1 className="text-3xl font-bold text-foreground mb-8">Bağlantılar</h1>
 
       <div className="w-full max-w-lg space-y-2">
