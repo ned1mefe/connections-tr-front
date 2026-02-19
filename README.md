@@ -1,4 +1,4 @@
-# Connections TR
+v# Connections TR
 
 A Turkish adaptation of the NYT Connections word puzzle game built with React + Vite.
 
@@ -13,7 +13,7 @@ A Turkish adaptation of the NYT Connections word puzzle game built with React + 
 ## Tech Stack
 
 - **Frontend**: React, TypeScript, Vite, Tailwind CSS, shadcn/ui
-- **Backend**: Separate Django REST API (not included in this repo) serving daily puzzles and validating guesses
+- **Backend**: Separate Django REST API (not included in this repo) serving daily puzzles and validating guesses - [connections_tr_backend](https://github.com/ned1mefe/connections_tr)
 
 ## Status
 
