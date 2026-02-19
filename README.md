@@ -1,4 +1,4 @@
-# Bağlantılar (Turkish Connections)
+# Connections TR
 
 A Turkish adaptation of the NYT Connections word puzzle game built with React + Vite.
 
@@ -21,9 +21,9 @@ A Turkish adaptation of the NYT Connections word puzzle game built with React + 
 
 ## Getting Started
 
-```sh
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
+```
+git clone https://github.com/ned1mefe/connections-tr-front
+cd connections-tr-front
 npm i
 npm run dev
 ```
